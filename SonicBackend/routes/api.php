@@ -6,19 +6,29 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\StreamController;
+use App\Http\Controllers\CommentController;
 
-// --- Authentifizierung (öffentlich) ---
+// --- Authentifizierung (Öffentlich) ---
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// --- Öffentliches Lesen ---
+// --- Öffentlich abrufbar (Auch ohne Login sichtbar) ---
 Route::get('/videos', [VideoController::class, 'index']);
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/streams', [StreamController::class, 'index']);
+Route::get('/comments', [CommentController::class, 'index']); // Kommentare lesen darf jeder
 
-// --- Geschützt: nur eingeloggte Nutzer ---
+// --- Geschützte Routen (Nur für eingeloggte Nutzer via Sanctum) ---
 Route::middleware('auth:sanctum')->group(function () {
+    
+    // Benutzerprofil & eigene Uploads für "Mein Account"
+    Route::get('/user/me', [AuthController::class, 'me']);
+    
+    // Neue Inhalte erstellen
     Route::post('/videos', [VideoController::class, 'store']);
-    Route::post('/videos/{id}/comments', [VideoController::class, 'addComment']);
-    Route::post('/posts', [PostController::class, 'store']);
+    Route::post('/posts', [PostController::class, 'store']); // Neue Diskussionen im Backend speichern
+    
+    // Neuen Kommentar schreiben (für Video oder Post)
+    Route::post('/comments', [CommentController::class, 'store']);
+    
 });
