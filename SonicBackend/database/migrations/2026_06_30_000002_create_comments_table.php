@@ -10,10 +10,9 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('video_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            // Polymorph: ein Kommentar kann zu einem Video ODER einem Post gehören
-            $table->morphs('commentable'); // erzeugt commentable_id + commentable_type
-            $table->text('content');
+            $table->text('text');
             $table->timestamps();
         });
     }

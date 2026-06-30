@@ -9,8 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('videos', function (Blueprint $table) {
-            // Wer das Video hochgeladen hat. Nullable, damit alte Einträge ohne Besitzer nicht crashen.
-            $table->foreignId('user_id')->nullable()->after('id')->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->after('id')->constrained()->cascadeOnDelete();
         });
     }
 
