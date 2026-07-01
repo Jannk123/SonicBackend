@@ -20,15 +20,14 @@ Route::get('/comments', [CommentController::class, 'index']); // Kommentare lese
 
 // --- Geschützte Routen (Nur für eingeloggte Nutzer via Sanctum) ---
 Route::middleware('auth:sanctum')->group(function () {
-    
     // Benutzerprofil & eigene Uploads für "Mein Account"
     Route::get('/user/me', [AuthController::class, 'me']);
-    
+    Route::put('/user/profile', [AuthController::class, 'updateProfile']);
+
     // Neue Inhalte erstellen
     Route::post('/videos', [VideoController::class, 'store']);
     Route::post('/posts', [PostController::class, 'store']); // Neue Diskussionen im Backend speichern
-    
+
     // Neuen Kommentar schreiben (für Video oder Post)
     Route::post('/comments', [CommentController::class, 'store']);
-    
 });
